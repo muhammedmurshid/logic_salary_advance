@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="salary_advance_form_view" model="ir.ui.view">
+        <field name="name">Salary Advance</field>
+        <field name="model">logic.salary.advance</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Advance">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,hr_approve,approve,reject,paid"/>
+                    <button class="oe_highlight" name="submit" type="object" string="Submit" states="draft"/>
+
+                    <button class="oe_highlight" name="hr_approval" type="object" string="Approve" states="hr_approve"
+                            groups="logic_salary_advance.hr_advance"/>
+                    <button class="oe_highlight" name="rejected" type="object" string="Reject"
+                            attrs="{'invisible':[('state', 'in', ['draft','approve','paid','reject'])]}"
+                            groups="logic_salary_advance.hr_advance"/>
+
+                    <!--                    <button name="cancel" type="object" string="Cancel" states="draft"/>-->
+                </header>
+
+                <sheet>
+                    <div class="oe_title oe_left">
+                        <h2>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="director_approval"
+                                   attrs="{'invisible':['|','|',('state', 'in', ['draft']),('make_visible', '=', True),('exceed_condition', '=', False)],'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                            <field name="employee_id"
+                                   attrs="{'readonly':[('state','in',['approve','hr_approve','draft','paid','reject'])]}"/>
+                            <field name="date" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                            <field name="department" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="exceed_condition" invisible="1"/>
+                            <field name="make_visible_employee" invisible="1"/>
+                            <field name="branch" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                        </group>
+                        <group>
+                            <field name="advance" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"
+                                   widget="monetary"/>
+                            <field name="advance_emp_type"/>
+                            <field name="month_type"
+                                   attrs="{'readonly':[('state','in',['approve','paid','reject'])], 'invisible':[('advance_emp_type', '!=', 'advance')]}"/>
+                            <field name="allowed_amount"
+                                   attrs="{'invisible':[('state', 'in', ['draft','approve','reject','paid'])]}"
+                                   widget="monetary"/>
+                            <field name="no_of_months"
+                                   attrs="{'readonly':[('state','in',['approve','paid','reject'])], 'invisible':[('advance_emp_type', '!=', 'loan')]}"/>
+                            <field name="pending_amount"
+                                   attrs="{'readonly':[('state','in',['approve','paid','reject','hr_approve'])], 'invisible':[('state','in',['draft'])]}"/>
+                            <field name="reason" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                            <field name="make_visible" invisible="1"/>
+
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="salary_advance_tree_view" model="ir.ui.view">
+        <field name="name">Advance Details</field>
+        <field name="model">logic.salary.advance</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="allowed_amount" sum='Total' widget="monetary" optional="show" decoration-bf="1"/>
+                <field name="state"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_menu_salary_advance">
+        <field name="name">Advance Requests</field>
+        <field name="res_model">logic.salary.advance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Advance" id="menu_advance_view"
+              sequence="1" web_icon="logic_salary_advance/static/description/icon.png"/>
+    <menuitem name="Advance Request" id="menu_advance_base_view" action="action_menu_salary_advance"
+              parent="menu_advance_view"
+              sequence="2"/>
+</odoo>

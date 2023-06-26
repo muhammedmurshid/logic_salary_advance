@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="salary_advance_return_view" model="ir.ui.view">
+        <field name="name">Salary Advance Return</field>
+        <field name="model">advance.return</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Advance return">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,return"/>
+                    <button class="oe_highlight" name="confirm" type="object" string="Confirm" states="draft"/>
+
+                </header>
+
+                <sheet>
+                    <div class="oe_title oe_left">
+                        <h2>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'readonly':[('state','in',['return'])]}"/>
+                            <field name="date" attrs="{'readonly':[('state','in',['return'])]}"/>
+                            <field name="advance" attrs="{'readonly':[('state','in',['return'])]}" widget="monetary"/>
+                            <field name="reference_no" attrs="{'readonly':[('state','in',['return'])]}"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="payment_method" attrs="{'readonly':[('state','in',['return'])]}"/>
+                            <field name="debit" attrs="{'readonly':[('state','in',['return'])]}"/>
+                            <field name="credit" attrs="{'readonly':[('state','in',['return'])]}"/>
+                            <field name="journal" attrs="{'readonly':[('state','in',['return'])]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="seq_advance_return" model="ir.sequence">
+        <field name="name">Return</field>
+        <field name="code">advance.return</field>
+        <field name="active">TRUE</field>
+        <field name="prefix">SR</field>
+        <field name="padding">3</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+    <record id="salary_advance_return_tree_view" model="ir.ui.view">
+        <field name="name">Advance Return</field>
+        <field name="model">advance.return</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="advance" sum="Total" widget="monetary"/>
+                <field name="reference_no"/>
+                <field name="state"/>
+            </tree>
+
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_salary_advance_return">
+        <field name="name">Advance Returns</field>
+        <field name="res_model">advance.return</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Advance Return" id="menu_advance_return_view" action="action_salary_advance_return"
+              parent="menu_advance_view"
+              groups="logic_salary_advance.accounts_advance"
+              sequence="4"/>
+    <menuitem name="Advance Return" id="menu_advance_return_view_hr" action="action_salary_advance_return"
+              parent="menu_advance_view"
+              groups="logic_salary_advance.hr_advance"
+              sequence="4"/>
+</odoo>

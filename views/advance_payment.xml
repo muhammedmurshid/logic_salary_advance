@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="salary_advance_payment_form_view" model="ir.ui.view">
+        <field name="name">Salary Advance Payment</field>
+        <field name="model">employee.advance.payment</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Advance Payment">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,paid,cancel"/>
+                    <button name="payment_paid" class="oe_highlight" type="object" string="Paid" states="draft"/>
+                    <button name="cancel" type="object" string="Cancel" states="draft"/>
+                    <button name="back_home" type="object" string="Back" states="cancel"/>
+
+                </header>
+
+                <sheet>
+                    <div class="oe_title oe_left">
+                        <h2>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="adv_type"/>
+                            <field name="employee_id"/>
+                            <field name="date"/>
+                            <field name="department"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <!--                            <field name="exceed_condition"/>-->
+                            <!--                            <field name="branch"/>-->
+                            <field name="reason"/>
+                            <!--                            <field name="no_of_months"/>-->
+                        </group>
+                        <group>
+                            <field name="advance" widget="monetary"/>
+                            <field name="payment_method"/>
+                            <field name="debit"/>
+                            <field name="credit"/>
+                            <field name="journal"/>
+                            <field name="id_rec" invisible="1"/>
+                            <!--                            <field name="pending_amount"/>-->
+
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="user_view_advance_form_inherit" model="ir.ui.view">
+        <field name="name">inheritance</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='address_home_id']" position="after">
+                <field name="sample_custom"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="salary_advance_payment_tree_view" model="ir.ui.view">
+        <field name="name">Advance Details</field>
+        <field name="model">employee.advance.payment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!--                <field name="name"/>-->
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="advance" widget="monetary" sum="Total"/>
+                <field name="state"/>
+            </tree>
+
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_menu_salary_advance_payment">
+        <field name="name">Advance Payments</field>
+        <field name="res_model">employee.advance.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Advance Payment" id="menu_advance_payment_view" action="action_menu_salary_advance_payment"
+              parent="menu_advance_view"
+              sequence="3" groups="logic_salary_advance.accounts_advance"/>
+</odoo>

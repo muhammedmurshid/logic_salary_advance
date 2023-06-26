@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+salary_advance_payment,salary_advance,model_employee_advance_payment,accounts_advance,1,1,1,1
+salary_advance,salary_advance,model_employee_advance_payment,hr_advance,1,1,1,0
+salary_advance_return,salary_advance_return,model_advance_return,hr_advance,1,1,1,1
+salary_advance_return_acc,salary_advance_return,model_advance_return,accounts_advance,1,1,1,1
+salary_advance_base,salary_advance,model_employee_advance_payment,user_advance,1,1,1,1
+salary_advance_user,salary_advance_return,model_advance_return,user_advance,1,1,1,1
+advance_user,salary_advance_user,model_logic_salary_advance,user_advance,1,1,1,1
+advance_hr,salary_advance_hr,model_logic_salary_advance,hr_advance,1,1,1,1
+advance_aac,salary_advance_acc,model_logic_salary_advance,accounts_advance,1,1,1,1
