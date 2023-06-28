@@ -3,9 +3,10 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class LogicSalaryAdvance(models.Model):
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'logic.salary.advance'
     _rec_name = 'name'
+    _description = 'Salary Advance'
 
     name = fields.Char(string='Name', readonly=True, default=lambda self: 'Adv/')
     employee_id = fields.Char(string='Employee', default=lambda self: self.env.user.name, readonly=True)
@@ -48,6 +49,7 @@ class LogicSalaryAdvance(models.Model):
     pending_amount = fields.Float(string='Pending amount', readonly=True)
 
     def submit(self):
+
         payment = self.env['employee.advance.payment'].search([])
         return_amt = self.env['advance.return'].search([])
         total = 0
@@ -76,7 +78,37 @@ class LogicSalaryAdvance(models.Model):
         self.state = 'hr_approve'
         print(self.id, 'id')
 
+    def activity_schedule_advance_request(self):
+        print('hhhi')
+        ss = self.env['logic.salary.advance'].search([])
+        for i in ss:
+            if i.state == 'hr_approve':
+                users = ss.env.ref('logic_salary_advance.hr_advance').users
+                for j in users:
+                    activity_type = i.env.ref('logic_salary_advance.mail_activity_advance_alert')
+                    i.activity_schedule('logic_salary_advance.mail_activity_advance_alert', user_id=j.id,
+                                        note='Received a new Advance request')
+
+    def activity_schedule_advance_request_accounts(self):
+        print('hhhi')
+        ss = self.env['logic.salary.advance'].search([])
+        for i in ss:
+            if i.state == 'approve':
+                users = ss.env.ref('logic_salary_advance.accounts_advance').users
+                for j in users:
+                    activity_type = i.env.ref('logic_salary_advance.mail_activity_advance_alert')
+                    i.activity_schedule('logic_salary_advance.mail_activity_advance_alert', user_id=j.id,
+                                        note='Received a new Advance request')
+
     def hr_approval(self):
+        self.message_post(body="HR Approved Advance Request")
+
+        activity_id = self.env['mail.activity'].search([('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
+            'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
+        activity_id.action_feedback(feedback='HR Approved Advance Request')
+        other_activity_ids = self.env['mail.activity'].search([('res_id', '=', self.id), (
+            'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
+        other_activity_ids.unlink()
         print(self.department.id)
         if self.exceed_condition == True:
             if not self.director_approval:
@@ -137,4 +169,12 @@ class LogicSalaryAdvance(models.Model):
             self.make_visible_employee = True
 
     def rejected(self):
+        self.message_post(body="Rejected")
+
+        activity_id = self.env['mail.activity'].search([('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
+            'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
+        activity_id.action_feedback(feedback='Rejected')
+        other_activity_ids = self.env['mail.activity'].search([('res_id', '=', self.id), (
+            'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
+        other_activity_ids.unlink()
         self.state = 'reject'

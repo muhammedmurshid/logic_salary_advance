@@ -7,6 +7,7 @@
         'security/user_groups.xml',
         'security/ir.model.access.csv',
         'security/rules.xml',
+        'data/activity.xml',
         'views/advance_view.xml',
         'views/advance_payment.xml',
         'views/advance_return.xml'

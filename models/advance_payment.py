@@ -43,9 +43,19 @@ class EmployeeSalaryAdvancePayment(models.Model):
         self.state = 'draft'
 
     def payment_paid(self):
+        self.message_post(body="Paid")
+
         aa = self.env['logic.salary.advance'].search([])
         for i in aa:
             if i.id == self.id_rec:
+                activity_id = self.env['mail.activity'].search(
+                    [('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
+                        'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
+                activity_id.action_feedback(feedback='Paid')
+                other_activity_ids = self.env['mail.activity'].search([('res_id', '=', self.id_rec), (
+                    'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
+
+                other_activity_ids.unlink()
                 i.state = 'paid'
         move_obj = self.env['account.move']
         timenow = time.strftime('%Y-%m-%d')
