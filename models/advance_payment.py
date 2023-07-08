@@ -7,7 +7,7 @@ class EmployeeSalaryAdvancePayment(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'employee_id'
 
-    employee_id = fields.Char(string='Employee', required=True, help="Employee")
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, help="Employee")
     date = fields.Date(string='Date', required=True, help="Submit date")
     reason = fields.Text(string='Reason', help="Reason")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
