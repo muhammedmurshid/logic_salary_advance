@@ -6,6 +6,7 @@ class EmployeeSalaryAdvancePayment(models.Model):
     _name = "employee.advance.payment"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'employee_id'
+    _description = 'Employee Advance Payment'
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, help="Employee")
     date = fields.Date(string='Date', required=True, help="Submit date")
@@ -64,11 +65,11 @@ class EmployeeSalaryAdvancePayment(models.Model):
         credit_sum = 0.0
         for request in self:
             amount = request.advance
-            request_name = request.employee_id
+            request_name = request.employee_id.name
             reference = request.name
             journal_id = request.journal.id
             move = {
-                'narration': 'Salary Advance Of ' + request_name,
+                'narration': 'Salary Advance of ' + request_name,
                 'ref': reference,
                 'journal_id': journal_id,
                 'date': timenow,

@@ -31,7 +31,7 @@
                             <field name="director_approval"
                                    attrs="{'invisible':['|','|',('state', 'in', ['draft']),('make_visible', '=', True),('exceed_condition', '=', False)],'readonly':[('state','in',['approve','paid','reject'])]}"/>
                             <field name="employee_id"
-                                   attrs="{'readonly':[('state','in',['approve','hr_approve','paid','reject'])]}"/>
+                                   attrs="{'readonly':[('state','in',['draft','approve','hr_approve','paid','reject'])]}"/>
                             <field name="date" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
                             <field name="department" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
                             <field name="currency_id" invisible="1"/>

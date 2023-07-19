@@ -9,7 +9,8 @@ class LogicSalaryAdvance(models.Model):
     _description = 'Salary Advance'
 
     name = fields.Char(string='Name', readonly=True, default=lambda self: 'Adv/')
-    employee_id = fields.Many2one('hr.employee', string='Employee', default=lambda self: self.env.user.employee_id)
+    employee_id = fields.Many2one('hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
+                                  readonly=True)
     date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.today(), help="Submit date")
     branch = fields.Many2one('logic.branches', string='Branch')
     reason = fields.Text(string='Reason', help="Reason")
@@ -49,7 +50,7 @@ class LogicSalaryAdvance(models.Model):
     pending_amount = fields.Float(string='Pending amount', readonly=True)
 
     def submit(self):
-
+        ss = self.env['logic.salary.advance'].search([])
         payment = self.env['employee.advance.payment'].search([])
         return_amt = self.env['advance.return'].search([])
         total = 0
@@ -78,6 +79,12 @@ class LogicSalaryAdvance(models.Model):
         self.state = 'hr_approve'
         print(self.id, 'id')
 
+        users = ss.env.ref('logic_salary_advance.hr_advance').users
+        for j in users:
+            activity_type = self.env.ref('logic_salary_advance.mail_activity_advance_alert')
+            self.activity_schedule('logic_salary_advance.mail_activity_advance_alert', user_id=j.id,
+                                   note='Received a new Advance request')
+
     def activity_schedule_advance_request(self):
         print('hhhi')
         ss = self.env['logic.salary.advance'].search([])
@@ -101,7 +108,8 @@ class LogicSalaryAdvance(models.Model):
                                         note='Received a new Advance request')
 
     def hr_approval(self):
-        self.message_post(body="HR Approved Advance Request")
+        ss = self.env['logic.salary.advance'].search([])
+        print('account')
 
         activity_id = self.env['mail.activity'].search([('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
             'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
@@ -109,6 +117,12 @@ class LogicSalaryAdvance(models.Model):
         other_activity_ids = self.env['mail.activity'].search([('res_id', '=', self.id), (
             'activity_type_id', '=', self.env.ref('logic_salary_advance.mail_activity_advance_alert').id)])
         other_activity_ids.unlink()
+        users = ss.env.ref('logic_salary_advance.accounts_advance').users
+        for j in users:
+            activity_type = self.env.ref('logic_salary_advance.mail_activity_advance_alert')
+            self.activity_schedule('logic_salary_advance.mail_activity_advance_alert', user_id=j.id,
+                                   note='Received a new Advance request')
+        self.message_post(body="HR Approved Advance Request")
         print(self.department.id)
         if self.exceed_condition == True:
             if not self.director_approval:
