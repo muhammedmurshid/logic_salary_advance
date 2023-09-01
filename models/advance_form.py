@@ -34,8 +34,10 @@ class LogicSalaryAdvance(models.Model):
                               ('paid', 'Paid')], string='Status', default='draft', track_visibility='onchange')
     director_approval = fields.Many2one('hr.employee', string='Director approval',
                                         domain=[('sample_custom', '=', 'True')])
-    advance_emp_type = fields.Selection([('loan', 'Loan'), ('advance', 'Advance')], string='Type')
-    month_type = fields.Selection([('current', 'Current Month'), ('next', 'Next Month')], string='From which month')
+    advance_emp_type = fields.Selection([('loan', 'Loan'), ('advance', 'Advance')], string='Type', default='advance',
+                                        readonly=True)
+    month_type = fields.Selection([('current', 'Current Month')], string='From which month',
+                                  default='current', readonly=True)
 
     @api.onchange('advance')
     def advance_onchange(self):

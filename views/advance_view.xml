@@ -33,12 +33,12 @@
                             <field name="employee_id"
                                    attrs="{'readonly':[('state','in',['draft','approve','hr_approve','paid','reject'])]}"/>
                             <field name="date" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
-                            <field name="department" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                            <field name="department" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}" options="{'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="exceed_condition" invisible="1"/>
                             <field name="make_visible_employee" invisible="1"/>
-                            <field name="branch" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
+                            <field name="branch" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="advance" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"

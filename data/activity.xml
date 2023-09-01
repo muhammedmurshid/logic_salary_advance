@@ -5,6 +5,11 @@
         <field name="res_model_id" ref="logic_salary_advance.model_logic_salary_advance"/>
         <field name="delay_count">30</field>
     </record>
+    <record id="mail_activity_advance_payment_alert" model="mail.activity.type">
+        <field name="name">Advance Payment</field>
+        <field name="res_model_id" ref="logic_salary_advance.model_employee_advance_payment"/>
+        <field name="delay_count">30</field>
+    </record>
     <data noupdate="1">
         <record id="ir_advance_activity" model="ir.cron">
             <field name="name">Advance HR</field>
