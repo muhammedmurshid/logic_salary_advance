@@ -2,7 +2,7 @@
     'name': "Salary Advance",
     'version': "14.0.1.0",
     'sequence': "0",
-    'depends': ['mail', 'base'],
+    'depends': ['mail', 'base', 'hr'],
     'data': [
         'security/user_groups.xml',
         'security/ir.model.access.csv',

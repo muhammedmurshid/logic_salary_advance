@@ -12,7 +12,7 @@ class LogicSalaryAdvance(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
                                   readonly=True)
     date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.today(), help="Submit date")
-    branch = fields.Many2one('logic.branches', string='Branch')
+    branch = fields.Many2one('logic.base.branches', string='Branch', related='employee_id.branch_id')
     reason = fields.Text(string='Reason', help="Reason")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id)
@@ -23,7 +23,7 @@ class LogicSalaryAdvance(models.Model):
     payment_method = fields.Many2one('account.journal', string='Payment Method')
     exceed_condition = fields.Boolean(string='Exceed than Maximum',
                                       help="The Advance is greater than the maximum percentage in salary structure")
-    department = fields.Many2one('hr.department', string='Department')
+    department = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')
     no_of_months = fields.Integer(string='Loan for how many months')
 
     state = fields.Selection([('draft', 'Draft'),
