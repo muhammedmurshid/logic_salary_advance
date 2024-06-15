@@ -12,7 +12,7 @@ class LogicSalaryAdvance(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
                                   readonly=True)
     date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.today(), help="Submit date")
-    branch = fields.Many2one('logic.base.branches', string='Branch', related='employee_id.branch_id')
+    branch = fields.Many2one('logic.base.branches', string='Branch', default=lambda self: self.env.user.employee_id.branch_id)
     reason = fields.Text(string='Reason', help="Reason")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id)

@@ -52,7 +52,7 @@
                             <field name="no_of_months"
                                    attrs="{'readonly':[('state','in',['approve','paid','reject'])], 'invisible':[('advance_emp_type', '!=', 'loan')]}"/>
                             <field name="pending_amount"
-                                   attrs="{'readonly':[('state','in',['approve','paid','reject','hr_approve'])], 'invisible':[('state','in',['draft'])]}"/>
+                                   attrs="{'readonly':[('state','in',['approve','paid','reject','hr_approve'])], 'invisible':[('state','not in',['cancel'])]}"/>
                             <field name="reason" attrs="{'readonly':[('state','in',['approve','paid','reject'])]}"/>
                             <field name="make_visible" invisible="1"/>
 
