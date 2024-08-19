@@ -87,6 +87,14 @@ class LogicSalaryAdvance(models.Model):
             self.activity_schedule('logic_salary_advance.mail_activity_advance_alert', user_id=j.id,
                                    note='Received a new Advance request')
 
+    def action_change_branches_from_employees(self):
+        rec = self.env['logic.salary.advance'].sudo().search([])
+        for i in rec:
+            i.sudo().update({
+                'branch': i.employee_id.branch_id.id
+            })
+
+
     def activity_schedule_advance_request(self):
         print('hhhi')
         ss = self.env['logic.salary.advance'].search([])
